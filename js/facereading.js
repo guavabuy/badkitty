@@ -453,8 +453,22 @@ const FaceReading = {
      * 渲染分析结果
      */
     renderResult: function (analysis) {
+        // 检测语言
+        const isEn = typeof I18n !== 'undefined' && I18n.isEnglish();
+        
         if (!analysis) {
-            return `
+            return isEn ? `
+                <div class="analysis-card face-reading-error">
+                    <h3>😿 Oops, no face detected~</h3>
+                    <p>Please ensure:</p>
+                    <ul>
+                        <li>📸 Clear frontal face in the photo</li>
+                        <li>💡 Good lighting, face not covered</li>
+                        <li>🖼️ Moderate image size (under 500KB recommended)</li>
+                    </ul>
+                    <p>Try another photo~ Meow~</p>
+                </div>
+            ` : `
                 <div class="analysis-card face-reading-error">
                     <h3>😿 哎呀，没有检测到人脸呢~</h3>
                     <p>请确保：</p>
@@ -472,36 +486,36 @@ const FaceReading = {
 
         return `
             <div class="analysis-card face-reading-result">
-                <h3>🔮 Kitty的面相分析 🔮</h3>
+                <h3>🔮 ${isEn ? 'Kitty\'s Face Reading' : 'Kitty的面相分析'} 🔮</h3>
                 
                 <div class="face-score-section">
                     <div class="overall-score">
                         <span class="score-number">${overall.average}</span>
-                        <span class="score-label">综合评分</span>
+                        <span class="score-label">${isEn ? 'Overall Score' : '综合评分'}</span>
                     </div>
                     <div class="score-bars">
                         <div class="score-item">
-                            <span>智慧</span>
+                            <span>${isEn ? 'Wisdom' : '智慧'}</span>
                             <div class="bar"><div class="fill" style="width:${overall.scores.wisdom}%"></div></div>
                             <span>${overall.scores.wisdom}</span>
                         </div>
                         <div class="score-item">
-                            <span>福气</span>
+                            <span>${isEn ? 'Fortune' : '福气'}</span>
                             <div class="bar"><div class="fill" style="width:${overall.scores.fortune}%"></div></div>
                             <span>${overall.scores.fortune}</span>
                         </div>
                         <div class="score-item">
-                            <span>性格</span>
+                            <span>${isEn ? 'Personality' : '性格'}</span>
                             <div class="bar"><div class="fill" style="width:${overall.scores.personality}%"></div></div>
                             <span>${overall.scores.personality}</span>
                         </div>
                         <div class="score-item">
-                            <span>事业</span>
+                            <span>${isEn ? 'Career' : '事业'}</span>
                             <div class="bar"><div class="fill" style="width:${overall.scores.career}%"></div></div>
                             <span>${overall.scores.career}</span>
                         </div>
                         <div class="score-item">
-                            <span>感情</span>
+                            <span>${isEn ? 'Love' : '感情'}</span>
                             <div class="bar"><div class="fill" style="width:${overall.scores.relationship}%"></div></div>
                             <span>${overall.scores.relationship}</span>
                         </div>
@@ -509,74 +523,77 @@ const FaceReading = {
                 </div>
                 
                 <div class="face-overall">
-                    <p><strong>📜 总评：</strong>${overall.description}</p>
+                    <p><strong>📜 ${isEn ? 'Summary:' : '总评：'}</strong>${overall.description}</p>
                     <p class="advice">💡 ${overall.advice}</p>
                 </div>
             </div>
 
             <div class="analysis-card">
-                <h4>😺 当前神态</h4>
+                <h4>😺 ${isEn ? 'Current Expression' : '当前神态'}</h4>
                 <p><strong>${expression.type}</strong> (${expression.confidence}%)</p>
                 <p>${expression.description}</p>
             </div>
 
             <div class="analysis-card">
-                <h4>👤 脸型分析</h4>
+                <h4>👤 ${isEn ? 'Face Shape Analysis' : '脸型分析'}</h4>
                 <p><strong>${faceShape.type}</strong></p>
                 <p>${faceShape.description}</p>
                 <p class="interpretation">${faceShape.interpretation}</p>
             </div>
 
             <div class="analysis-card">
-                <h4>🌟 额头（天庭）</h4>
+                <h4>🌟 ${isEn ? 'Forehead (天庭)' : '额头（天庭）'}</h4>
                 <p><strong>${forehead.type}</strong></p>
                 <p>${forehead.description}</p>
                 <p class="interpretation">${forehead.interpretation}</p>
             </div>
 
             <div class="analysis-card">
-                <h4>🌙 眉毛</h4>
+                <h4>🌙 ${isEn ? 'Eyebrows' : '眉毛'}</h4>
                 <p><strong>${eyebrows.type}</strong></p>
                 <p>${eyebrows.description}</p>
                 <p class="interpretation">${eyebrows.interpretation}</p>
             </div>
 
             <div class="analysis-card">
-                <h4>👁️ 眼睛</h4>
+                <h4>👁️ ${isEn ? 'Eyes' : '眼睛'}</h4>
                 <p><strong>${eyes.type}</strong></p>
                 <p>${eyes.description}</p>
                 <p class="interpretation">${eyes.interpretation}</p>
             </div>
 
             <div class="analysis-card">
-                <h4>👃 鼻子（财帛宫）</h4>
+                <h4>👃 ${isEn ? 'Nose (财帛宫 - Wealth Palace)' : '鼻子（财帛宫）'}</h4>
                 <p><strong>${nose.type}</strong></p>
                 <p>${nose.description}</p>
                 <p class="interpretation">${nose.interpretation}</p>
             </div>
 
             <div class="analysis-card">
-                <h4>👄 嘴巴</h4>
+                <h4>👄 ${isEn ? 'Mouth' : '嘴巴'}</h4>
                 <p><strong>${mouth.type}</strong></p>
                 <p>${mouth.description}</p>
                 <p class="interpretation">${mouth.interpretation}</p>
             </div>
 
             <div class="analysis-card">
-                <h4>😊 下巴（地阁）</h4>
+                <h4>😊 ${isEn ? 'Chin (地阁 - Earth Palace)' : '下巴（地阁）'}</h4>
                 <p><strong>${chin.type}</strong></p>
                 <p>${chin.description}</p>
                 <p class="interpretation">${chin.interpretation}</p>
             </div>
 
             <div class="analysis-card kitty-summary">
-                <h4>🐱 Kitty有话说</h4>
-                <p>喵~ 这只是根据面相学的初步分析哦！</p>
-                <p>记住，<strong>相由心生</strong>，你的心态和行为才是决定命运的关键！</p>
-                <p>多做善事，保持乐观，好运自然来喵~ ✨</p>
+                <h4>🐱 ${isEn ? 'Kitty Says' : 'Kitty有话说'}</h4>
+                <p>${isEn ? 'Meow~ This is just a preliminary analysis based on face reading!' : '喵~ 这只是根据面相学的初步分析哦！'}</p>
+                <p>${isEn ? 'Remember, <strong>"appearance follows the heart"</strong> - your mindset and actions determine your destiny!' : '记住，<strong>相由心生</strong>，你的心态和行为才是决定命运的关键！'}</p>
+                <p>${isEn ? 'Do good deeds, stay optimistic, and good luck will come naturally~ ✨' : '多做善事，保持乐观，好运自然来喵~ ✨'}</p>
                 <p class="disclaimer-note" style="margin-top: 12px; font-size: 0.85rem; color: #888;">
-                    ⚠️ 面相分析仅供娱乐参考，不作为婚姻、求职等重大决策依据
+                    ${isEn ? '⚠️ Face reading is for entertainment only, not for major decisions like marriage or career' : '⚠️ 面相分析仅供娱乐参考，不作为婚姻、求职等重大决策依据'}
                 </p>
+                ${isEn ? `<p class="privacy-note" style="margin-top: 8px; font-size: 0.85rem; color: #888;">
+                    🔒 Your photo is processed locally and not stored on any server.
+                </p>` : ''}
             </div>
 
             ${typeof ShareUtils !== 'undefined' ? ShareUtils.createActionButtons('facereading') : ''}

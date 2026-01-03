@@ -205,26 +205,10 @@ const YiJing = {
     },
 
     /**
-     * 渲染卦象线条
+     * 渲染卦象线条（原版，内部调用）
      */
-    renderLines(lines) {
-        let html = '<div class="hexagram-lines">';
-        const positions = ['初爻', '二爻', '三爻', '四爻', '五爻', '上爻'];
-
-        // 从下到上显示
-        for (let i = 5; i >= 0; i--) {
-            const isYang = lines[i] === '1';
-            html += `<div class="yao-line">
-                <span class="yao-position">${positions[i]}</span>
-                <div class="yao-symbol">
-                    ${isYang ?
-                    '<span class="yao-solid"></span>' :
-                    '<div class="yao-broken"><span></span><span></span></div>'}
-                </div>
-            </div>`;
-        }
-        html += '</div>';
-        return html;
+    _renderLinesInternal(lines) {
+        return this.renderLines(lines, false);
     },
 
     /**
@@ -232,6 +216,9 @@ const YiJing = {
      */
     renderResult(result) {
         const { hexagram } = result;
+        
+        // 检测语言
+        const isEn = typeof I18n !== 'undefined' && I18n.isEnglish();
 
         let html = `
             <div class="hexagram-display">
@@ -240,19 +227,24 @@ const YiJing = {
                 </div>
                 <div class="hexagram-name">${hexagram.title || hexagram.name}</div>
             </div>
-            ${this.renderLines(hexagram.lines)}
+            ${this.renderLines(hexagram.lines, isEn)}
             <div class="analysis-card">
-                <h4>卦象含义</h4>
+                <h4>${isEn ? 'Hexagram Meaning' : '卦象含义'}</h4>
                 <p>${hexagram.meaning}</p>
             </div>
             <div class="analysis-card">
-                <h4>行事建议</h4>
+                <h4>${isEn ? 'Guidance' : '行事建议'}</h4>
                 <p>${hexagram.advice}</p>
             </div>
             <div class="analysis-card">
-                <h4>上卦与下卦</h4>
-                <p>上卦：${hexagram.upper?.name || '乾'}（${hexagram.upper?.nature || '天'}）</p>
-                <p>下卦：${hexagram.lower?.name || '坤'}（${hexagram.lower?.nature || '地'}）</p>
+                <h4>${isEn ? 'Upper & Lower Trigrams' : '上卦与下卦'}</h4>
+                <p>${isEn ? 'Upper' : '上卦'}：${hexagram.upper?.name || '乾'}（${hexagram.upper?.nature || '天'}）</p>
+                <p>${isEn ? 'Lower' : '下卦'}：${hexagram.lower?.name || '坤'}（${hexagram.lower?.nature || '地'}）</p>
+            </div>
+            <div class="analysis-card disclaimer-card">
+                <p class="disclaimer-note" style="font-size: 0.85rem; color: #888;">
+                    ${isEn ? '⚠️ Yi Jing divination is for guidance only, not for major decisions~' : '⚠️ 易经占卜仅供参考，不作为重大决策依据～'}
+                </p>
             </div>
         `;
 
@@ -261,6 +253,31 @@ const YiJing = {
             html += ShareUtils.createActionButtons('yijing');
         }
 
+        return html;
+    },
+    
+    /**
+     * 渲染卦象线条（支持双语）
+     */
+    renderLines(lines, isEn = false) {
+        let html = '<div class="hexagram-lines">';
+        const positionsZh = ['初爻', '二爻', '三爻', '四爻', '五爻', '上爻'];
+        const positionsEn = ['1st', '2nd', '3rd', '4th', '5th', '6th'];
+
+        // 从下到上显示
+        for (let i = 5; i >= 0; i--) {
+            const isYang = lines[i] === '1';
+            const position = isEn ? positionsEn[i] : positionsZh[i];
+            html += `<div class="yao-line">
+                <span class="yao-position">${position}</span>
+                <div class="yao-symbol">
+                    ${isYang ?
+                    '<span class="yao-solid"></span>' :
+                    '<div class="yao-broken"><span></span><span></span></div>'}
+                </div>
+            </div>`;
+        }
+        html += '</div>';
         return html;
     }
 };

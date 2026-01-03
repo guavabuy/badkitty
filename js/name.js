@@ -161,19 +161,26 @@ const NameAnalysis = {
     renderResult(result) {
         if (result.error) return `<div class="analysis-card"><p>${result.error}</p></div>`;
         const { wuge, luck } = result;
+        
+        // 检测语言
+        const isEn = typeof I18n !== 'undefined' && I18n.isEnglish();
+        
         const getLuckClass = l => l.luck === 'good' ? 'good' : l.luck === 'bad' ? 'bad' : 'neutral';
-        const getLuckText = l => l.luck === 'good' ? '吉' : l.luck === 'bad' ? '凶' : '平';
+        const getLuckText = l => {
+            if (isEn) return l.luck === 'good' ? 'Good' : l.luck === 'bad' ? 'Bad' : 'Neutral';
+            return l.luck === 'good' ? '吉' : l.luck === 'bad' ? '凶' : '平';
+        };
 
         let html = '<div class="name-display"><div class="name-chars">';
         wuge.chars.forEach((c, i) => {
-            html += `<div class="name-char">${c}<span class="stroke-count">${wuge.strokes[i]}画</span></div>`;
+            html += `<div class="name-char">${c}<span class="stroke-count">${wuge.strokes[i]}${isEn ? ' strokes' : '画'}</span></div>`;
         });
         html += '</div></div>';
 
         // 五格说明
         html += `<div class="analysis-card">
-            <h4>📚 什么是五格剖象法？</h4>
-            <p>五格剖象法是根据汉字笔画数来分析姓名吉凶的方法。通过"天格、人格、地格、外格、总格"五个维度来解读姓名的能量。</p>
+            <h4>📚 ${isEn ? 'What is Wu Ge (Five Grids) Analysis?' : '什么是五格剖象法？'}</h4>
+            <p>${isEn ? 'Wu Ge Analysis uses Chinese character stroke counts to analyze name fortune. It reads name energy through five dimensions: 天格 (Tian Ge), 人格 (Ren Ge), 地格 (Di Ge), 外格 (Wai Ge), and 总格 (Zong Ge).' : '五格剖象法是根据汉字笔画数来分析姓名吉凶的方法。通过"天格、人格、地格、外格、总格"五个维度来解读姓名的能量。'}</p>
         </div>`;
 
         html += `<div class="wuge-grid">
@@ -186,36 +193,36 @@ const NameAnalysis = {
 
         // 详细的五格解释
         html += `<div class="analysis-card">
-            <h4>👤 人格分析（主运）- 数理${wuge.renGe}</h4>
-            <p><strong>什么是人格？</strong> 人格是姓名中最重要的格数，代表你的主要性格和一生的运势走向，就像你的"人生主旋律"。</p>
-            <p><strong>你的人格：</strong> ${luck.ren.meaning}</p>
-            <p>💡 ${luck.ren.luck === 'good' ? '这是一个很好的人格数理，有利于事业发展和人际关系！' : luck.ren.luck === 'bad' ? '这个人格数理可能会带来一些挑战，但通过努力可以克服。记住，命运掌握在自己手中！' : '这是一个中性的人格数理，平稳发展，关键看个人努力。'}</p>
+            <h4>👤 ${isEn ? '人格 (Ren Ge) - Main Fortune' : '人格分析（主运）'} - ${isEn ? 'Number' : '数理'}${wuge.renGe}</h4>
+            <p><strong>${isEn ? 'What is 人格?' : '什么是人格？'}</strong> ${isEn ? '人格 is the most important number in name analysis, representing your main personality and life direction.' : '人格是姓名中最重要的格数，代表你的主要性格和一生的运势走向，就像你的"人生主旋律"。'}</p>
+            <p><strong>${isEn ? 'Your 人格:' : '你的人格：'}</strong> ${luck.ren.meaning}</p>
+            <p>💡 ${luck.ren.luck === 'good' ? (isEn ? 'This is a very good number, beneficial for career and relationships!' : '这是一个很好的人格数理，有利于事业发展和人际关系！') : luck.ren.luck === 'bad' ? (isEn ? 'This number may bring some challenges, but effort can overcome them. Remember, destiny is in your hands!' : '这个人格数理可能会带来一些挑战，但通过努力可以克服。记住，命运掌握在自己手中！') : (isEn ? 'This is a neutral number. Steady development depends on personal effort.' : '这是一个中性的人格数理，平稳发展，关键看个人努力。')}</p>
         </div>`;
 
         html += `<div class="analysis-card">
-            <h4>🎯 总格分析（后运）- 数理${wuge.zongGe}</h4>
-            <p><strong>什么是总格？</strong> 总格代表你的后半生运势，尤其是48岁以后的人生走向，也象征你一生的总体成就。</p>
-            <p><strong>你的总格：</strong> ${luck.zong.meaning}</p>
-            <p>💡 ${luck.zong.luck === 'good' ? '后运吉祥，晚年会比较顺遂，年轻时的努力会在后期得到回报！' : luck.zong.luck === 'bad' ? '后运可能有些起伏，建议提早规划，为晚年做好准备。' : '后运平稳，顺其自然发展即可。'}</p>
+            <h4>🎯 ${isEn ? '总格 (Zong Ge) - Later Fortune' : '总格分析（后运）'} - ${isEn ? 'Number' : '数理'}${wuge.zongGe}</h4>
+            <p><strong>${isEn ? 'What is 总格?' : '什么是总格？'}</strong> ${isEn ? '总格 represents your fortune in later life, especially after age 48, and symbolizes overall life achievements.' : '总格代表你的后半生运势，尤其是48岁以后的人生走向，也象征你一生的总体成就。'}</p>
+            <p><strong>${isEn ? 'Your 总格:' : '你的总格：'}</strong> ${luck.zong.meaning}</p>
+            <p>💡 ${luck.zong.luck === 'good' ? (isEn ? 'Auspicious later fortune! Your early efforts will pay off in later years!' : '后运吉祥，晚年会比较顺遂，年轻时的努力会在后期得到回报！') : luck.zong.luck === 'bad' ? (isEn ? 'Later fortune may have fluctuations. Plan early for your later years.' : '后运可能有些起伏，建议提早规划，为晚年做好准备。') : (isEn ? 'Stable later fortune. Let things develop naturally.' : '后运平稳，顺其自然发展即可。')}</p>
         </div>`;
 
         html += `<div class="analysis-card">
-            <h4>🌱 地格分析（前运）- 数理${wuge.diGe}</h4>
-            <p><strong>什么是地格？</strong> 地格代表你的前半生运势（36岁前），包括学业、早期事业和感情基础。</p>
-            <p><strong>你的地格：</strong> ${luck.di.meaning}</p>
+            <h4>🌱 ${isEn ? '地格 (Di Ge) - Early Fortune' : '地格分析（前运）'} - ${isEn ? 'Number' : '数理'}${wuge.diGe}</h4>
+            <p><strong>${isEn ? 'What is 地格?' : '什么是地格？'}</strong> ${isEn ? '地格 represents your fortune in early life (before 36), including education, early career, and relationship foundations.' : '地格代表你的前半生运势（36岁前），包括学业、早期事业和感情基础。'}</p>
+            <p><strong>${isEn ? 'Your 地格:' : '你的地格：'}</strong> ${luck.di.meaning}</p>
         </div>`;
 
         html += `<div class="analysis-card">
-            <h4>🤝 外格分析（副运）- 数理${wuge.waiGe}</h4>
-            <p><strong>什么是外格？</strong> 外格代表你的人际关系和社会环境，反映别人眼中的你以及你的社交运势。</p>
-            <p><strong>你的外格：</strong> ${luck.wai.meaning}</p>
+            <h4>🤝 ${isEn ? '外格 (Wai Ge) - Social Fortune' : '外格分析（副运）'} - ${isEn ? 'Number' : '数理'}${wuge.waiGe}</h4>
+            <p><strong>${isEn ? 'What is 外格?' : '什么是外格？'}</strong> ${isEn ? '外格 represents your social relationships and environment, reflecting how others see you and your social fortune.' : '外格代表你的人际关系和社会环境，反映别人眼中的你以及你的社交运势。'}</p>
+            <p><strong>${isEn ? 'Your 外格:' : '你的外格：'}</strong> ${luck.wai.meaning}</p>
         </div>`;
 
         html += `<div class="analysis-card">
-            <h4>🏠 天格分析（祖运）- 数理${wuge.tianGe}</h4>
-            <p><strong>什么是天格？</strong> 天格代表祖先留给你的运势，与你的家族背景和先天条件有关。通常不直接影响命运，但会间接影响你的起点。</p>
-            <p><strong>你的天格：</strong> ${luck.tian.meaning}</p>
-            <p>💡 天格是由姓氏决定的，无法改变，因此不必过于在意。</p>
+            <h4>🏠 ${isEn ? '天格 (Tian Ge) - Ancestral Fortune' : '天格分析（祖运）'} - ${isEn ? 'Number' : '数理'}${wuge.tianGe}</h4>
+            <p><strong>${isEn ? 'What is 天格?' : '什么是天格？'}</strong> ${isEn ? '天格 represents the fortune passed down from ancestors, related to family background and innate conditions.' : '天格代表祖先留给你的运势，与你的家族背景和先天条件有关。通常不直接影响命运，但会间接影响你的起点。'}</p>
+            <p><strong>${isEn ? 'Your 天格:' : '你的天格：'}</strong> ${luck.tian.meaning}</p>
+            <p>💡 ${isEn ? '天格 is determined by surname and cannot be changed, so don\'t worry too much about it.' : '天格是由姓氏决定的，无法改变，因此不必过于在意。'}</p>
         </div>`;
 
         // 综合建议
@@ -224,19 +231,27 @@ const NameAnalysis = {
 
         let overallAdvice = '';
         if (goodCount >= 4) {
-            overallAdvice = `🎉 恭喜！您的姓名五格整体非常吉利（${goodCount}个吉格），是一个很好的名字！这个名字能为您带来顺遂的运势，助力人生发展。`;
+            overallAdvice = isEn 
+                ? `🎉 Congratulations! Your name's Wu Ge is very auspicious (${goodCount} good grids). This is a great name that brings smooth fortune and aids life development.`
+                : `🎉 恭喜！您的姓名五格整体非常吉利（${goodCount}个吉格），是一个很好的名字！这个名字能为您带来顺遂的运势，助力人生发展。`;
         } else if (goodCount >= 2) {
-            overallAdvice = `✨ 您的姓名五格中有${goodCount}个吉格，整体还不错。有些方面需要自己多加努力，但总体运势是正向的。`;
+            overallAdvice = isEn
+                ? `✨ Your name has ${goodCount} good grids, overall quite nice. Some areas need extra effort, but the overall trend is positive.`
+                : `✨ 您的姓名五格中有${goodCount}个吉格，整体还不错。有些方面需要自己多加努力，但总体运势是正向的。`;
         } else if (badCount >= 3) {
-            overallAdvice = `💪 您的姓名五格中有${badCount}个需要注意的格数。不过请记住，姓名只是参考，真正决定命运的是你的选择和努力。保持积极心态，一切皆有可能！`;
+            overallAdvice = isEn
+                ? `💪 Your name has ${badCount} grids that need attention. But remember, names are just reference. Your choices and efforts truly determine destiny. Stay positive, anything is possible!`
+                : `💪 您的姓名五格中有${badCount}个需要注意的格数。不过请记住，姓名只是参考，真正决定命运的是你的选择和努力。保持积极心态，一切皆有可能！`;
         } else {
-            overallAdvice = `☯️ 您的姓名五格比较中性，没有特别突出的吉凶。这意味着你的人生掌握在自己手中，努力和选择会决定你的未来走向。`;
+            overallAdvice = isEn
+                ? `☯️ Your name's Wu Ge is relatively neutral, with no particularly outstanding good or bad omens. This means your life is in your own hands - effort and choices will determine your future.`
+                : `☯️ 您的姓名五格比较中性，没有特别突出的吉凶。这意味着你的人生掌握在自己手中，努力和选择会决定你的未来走向。`;
         }
 
         html += `<div class="analysis-card">
-            <h4>📋 综合评价</h4>
+            <h4>📋 ${isEn ? 'Overall Evaluation' : '综合评价'}</h4>
             <p>${overallAdvice}</p>
-            <p>⚠️ 温馨提示：姓名学只是人生的一个参考维度，不能完全决定命运。心态、努力、选择才是人生的关键！</p>
+            <p>${isEn ? '⚠️ Note: Name analysis is just one dimension of life reference. It cannot fully determine destiny. Mindset, effort, and choices are the keys to life!' : '⚠️ 温馨提示：姓名学只是人生的一个参考维度，不能完全决定命运。心态、努力、选择才是人生的关键！'}</p>
         </div>`;
 
         // 添加点赞分享按钮

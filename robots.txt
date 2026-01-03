@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://kuakumakitty.com/sitemap.xml
-
+Sitemap: https://koakumakitty.com/sitemap.xml

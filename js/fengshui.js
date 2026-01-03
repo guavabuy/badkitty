@@ -674,19 +674,25 @@ const FengShui = {
      */
     renderResult(result) {
         const { mingGua, directionsAnalysis, houseAnalysis, roomAdvice } = result;
+        
+        // 检测语言
+        const isEn = typeof I18n !== 'undefined' && I18n.isEnglish();
+        
+        // 命系翻译
+        const lifeTypeEn = mingGua.lifeType === '东四命' ? 'East Group' : 'West Group';
 
         let html = '';
 
         // 命卦信息
         html += `
             <div class="analysis-card fengshui-card">
-                <h4>🔮 你的命卦：${mingGua.name}卦（${mingGua.lifeType}）</h4>
+                <h4>🔮 ${isEn ? `Your Ming Gua: ${mingGua.name} Gua (${lifeTypeEn})` : `你的命卦：${mingGua.name}卦（${mingGua.lifeType}）`}</h4>
                 <div class="mingua-info">
                     <div class="mingua-symbol">${this.getGuaSymbol(mingGua.name)}</div>
                     <div class="mingua-details">
-                        <p><strong>五行属性：</strong>${mingGua.element}</p>
-                        <p><strong>本命方位：</strong>${mingGua.direction}</p>
-                        <p><strong>命系分类：</strong>${mingGua.lifeType}</p>
+                        <p><strong>${isEn ? 'Element:' : '五行属性：'}</strong>${mingGua.element}</p>
+                        <p><strong>${isEn ? 'Direction:' : '本命方位：'}</strong>${mingGua.direction}</p>
+                        <p><strong>${isEn ? 'Group:' : '命系分类：'}</strong>${isEn ? lifeTypeEn : mingGua.lifeType}</p>
                     </div>
                 </div>
             </div>
@@ -695,12 +701,12 @@ const FengShui = {
         // 命卦性格详解
         html += `
             <div class="analysis-card">
-                <h4>📖 ${mingGua.name}卦性格详解</h4>
+                <h4>📖 ${isEn ? `${mingGua.name} Gua Personality` : `${mingGua.name}卦性格详解`}</h4>
                 <p>${mingGua.personality.personality}</p>
-                <p><strong>💼 事业建议：</strong>${mingGua.personality.career}</p>
-                <p><strong>💰 财运提示：</strong>${mingGua.personality.wealth}</p>
-                <p><strong>❤️ 感情建议：</strong>${mingGua.personality.relationship}</p>
-                <p><strong>🏥 健康注意：</strong>${mingGua.personality.health}</p>
+                <p><strong>💼 ${isEn ? 'Career:' : '事业建议：'}</strong>${mingGua.personality.career}</p>
+                <p><strong>💰 ${isEn ? 'Wealth:' : '财运提示：'}</strong>${mingGua.personality.wealth}</p>
+                <p><strong>❤️ ${isEn ? 'Love:' : '感情建议：'}</strong>${mingGua.personality.relationship}</p>
+                <p><strong>🏥 ${isEn ? 'Health:' : '健康注意：'}</strong>${mingGua.personality.health}</p>
             </div>
         `;
 
@@ -837,14 +843,14 @@ const FengShui = {
         // 温馨提示
         html += `
             <div class="analysis-card">
-                <h4>📝 温馨提示</h4>
-                <p>风水是一门辅助性的学问，旨在让居住环境更加和谐舒适。好风水可以锦上添花，但最重要的还是个人的努力和积极的心态！</p>
-                <p>如果现有房屋布局无法完全按照建议调整，可以通过以下方式改善：</p>
+                <h4>📝 ${isEn ? 'Tips' : '温馨提示'}</h4>
+                <p>${isEn ? 'Feng Shui is a supplementary study aimed at creating harmonious living environments. Good Feng Shui enhances fortune, but personal effort and positive attitude matter most!' : '风水是一门辅助性的学问，旨在让居住环境更加和谐舒适。好风水可以锦上添花，但最重要的还是个人的努力和积极的心态！'}</p>
+                <p>${isEn ? 'If you cannot fully adjust your current layout, try these improvements:' : '如果现有房屋布局无法完全按照建议调整，可以通过以下方式改善：'}</p>
                 <ul>
-                    <li>在吉位摆放重要家具（床、书桌、沙发等）</li>
-                    <li>在凶位使用化解物品或减少停留时间</li>
-                    <li>保持房屋整洁明亮，气场自然顺畅</li>
-                    <li>多在吉方位活动，接收正能量</li>
+                    <li>${isEn ? 'Place important furniture (bed, desk, sofa) in auspicious positions' : '在吉位摆放重要家具（床、书桌、沙发等）'}</li>
+                    <li>${isEn ? 'Use remedy items in unfavorable areas or reduce time spent there' : '在凶位使用化解物品或减少停留时间'}</li>
+                    <li>${isEn ? 'Keep your home clean and bright for smooth energy flow' : '保持房屋整洁明亮，气场自然顺畅'}</li>
+                    <li>${isEn ? 'Spend more time in auspicious directions to absorb positive energy' : '多在吉方位活动，接收正能量'}</li>
                 </ul>
             </div>
         `;

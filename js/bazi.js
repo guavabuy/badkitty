@@ -876,7 +876,11 @@ ${weakElements.map(el => elementRemedies[el]).join('\n\n')}
     renderResult(result) {
         const interpretations = this.generateInterpretation(result);
         const pillars = result.pillars;
+        
+        // 检测语言 - 保留中文命理符号
+        const isEn = typeof I18n !== 'undefined' && I18n.isEnglish();
 
+        // 四柱标签（保留中文）和五行都保留原样
         let html = `
             <div class="bazi-pillars">
                 <div class="pillar">
@@ -904,23 +908,23 @@ ${weakElements.map(el => elementRemedies[el]).join('\n\n')}
             <div class="wuxing-chart">
                 <div class="wuxing-item">
                     <div class="wuxing-symbol wood">木</div>
-                    <div class="wuxing-count">${result.elements['木']}个</div>
+                    <div class="wuxing-count">${result.elements['木']}${isEn ? '' : '个'}</div>
                 </div>
                 <div class="wuxing-item">
                     <div class="wuxing-symbol fire">火</div>
-                    <div class="wuxing-count">${result.elements['火']}个</div>
+                    <div class="wuxing-count">${result.elements['火']}${isEn ? '' : '个'}</div>
                 </div>
                 <div class="wuxing-item">
                     <div class="wuxing-symbol earth">土</div>
-                    <div class="wuxing-count">${result.elements['土']}个</div>
+                    <div class="wuxing-count">${result.elements['土']}${isEn ? '' : '个'}</div>
                 </div>
                 <div class="wuxing-item">
                     <div class="wuxing-symbol metal">金</div>
-                    <div class="wuxing-count">${result.elements['金']}个</div>
+                    <div class="wuxing-count">${result.elements['金']}${isEn ? '' : '个'}</div>
                 </div>
                 <div class="wuxing-item">
                     <div class="wuxing-symbol water">水</div>
-                    <div class="wuxing-count">${result.elements['水']}个</div>
+                    <div class="wuxing-count">${result.elements['水']}${isEn ? '' : '个'}</div>
                 </div>
             </div>
         `;
@@ -928,8 +932,8 @@ ${weakElements.map(el => elementRemedies[el]).join('\n\n')}
         interpretations.forEach(interp => {
             html += `
                 <div class="analysis-card">
-                    <h4>${interp.title}</h4>
-                    <p>${interp.content}</p>
+                    <h4>${isEn ? this.translateInterpTitle(interp.title) : interp.title}</h4>
+                    <p>${isEn ? this.translateInterpContent(interp.content) : interp.content}</p>
                 </div>
             `;
         });
@@ -946,23 +950,90 @@ ${weakElements.map(el => elementRemedies[el]).join('\n\n')}
 
         return html;
     },
+    
+    /**
+     * 翻译解读标题
+     */
+    translateInterpTitle(title) {
+        const map = {
+            '🎯 日主分析': '🎯 Day Master Analysis',
+            '⚖️ 五行平衡': '⚖️ Five Elements Balance',
+            '💡 开运建议': '💡 Lucky Tips',
+            '✨ 八字格局': '✨ BaZi Pattern',
+            '🔮 十神分析': '🔮 Ten Gods Analysis'
+        };
+        return map[title] || title;
+    },
+    
+    /**
+     * 翻译解读内容
+     */
+    translateInterpContent(content) {
+        // 日主分析翻译
+        const dayMasterMap = {
+            '甲木日主，如参天大树': 'Day Master 甲 Wood - Like a towering tree',
+            '乙木日主，如花草藤蔓': 'Day Master 乙 Wood - Like flowers and vines',
+            '丙火日主，如太阳光芒': 'Day Master 丙 Fire - Like the blazing sun',
+            '丁火日主，如灯烛微光': 'Day Master 丁 Fire - Like candlelight',
+            '戊土日主，如高山厚土': 'Day Master 戊 Earth - Like mountains and plains',
+            '己土日主，如田园沃土': 'Day Master 己 Earth - Like fertile farmland',
+            '庚金日主，如刀剑锐利': 'Day Master 庚 Metal - Like sharp blades',
+            '辛金日主，如珠玉珍贵': 'Day Master 辛 Metal - Like precious gems',
+            '壬水日主，如江河奔涌': 'Day Master 壬 Water - Like rushing rivers',
+            '癸水日主，如雨露滋润': 'Day Master 癸 Water - Like gentle rain',
+            // 性格特点
+            '性格正直、有领导力': 'Upright character, leadership qualities',
+            '性格温柔、适应力强': 'Gentle nature, highly adaptable',
+            '性格开朗、热情大方': 'Cheerful, warm and generous',
+            '性格细腻、有艺术天分': 'Delicate nature, artistic talents',
+            '性格稳重、诚实守信': 'Steady character, honest and trustworthy',
+            '性格温和、勤劳朴实': 'Gentle nature, hardworking and practical',
+            '性格刚毅、果断有力': 'Strong-willed, decisive and powerful',
+            '性格细腻、高雅有品': 'Refined nature, elegant taste',
+            '性格豁达、思维活跃': 'Open-minded, active thinker',
+            '性格聪慧、心思细密': 'Intelligent, meticulous mind'
+        };
+        
+        // 五行分析翻译
+        const elementMap = {
+            '木多：思维活跃': 'Wood abundant: Active thinking',
+            '木少：需增加灵活性': 'Wood lacking: Need more flexibility',
+            '火多：热情洋溢': 'Fire abundant: Full of passion',
+            '火少：需增加动力': 'Fire lacking: Need more motivation',
+            '土多：稳重踏实': 'Earth abundant: Steady and grounded',
+            '土少：需增加稳定性': 'Earth lacking: Need more stability',
+            '金多：果断有力': 'Metal abundant: Decisive and strong',
+            '金少：需增加决断力': 'Metal lacking: Need more decisiveness',
+            '水多：聪慧灵动': 'Water abundant: Smart and agile',
+            '水少：需增加智慧': 'Water lacking: Need more wisdom',
+            '五行平衡，运势和谐': 'Five elements balanced, fortune harmonious'
+        };
+        
+        let result = content;
+        for (const [zh, en] of Object.entries({...dayMasterMap, ...elementMap})) {
+            result = result.replace(zh, en);
+        }
+        return result;
+    },
 
     /**
      * 阶段3新增：渲染大运表
      */
     renderDaYunTable(daYunInfo) {
         if (!daYunInfo || !daYunInfo.daYunList) return '';
+        
+        const isEn = typeof I18n !== 'undefined' && I18n.isEnglish();
 
         const { direction, qiYun, daYunList, currentDaYun } = daYunInfo;
 
         let html = `
             <div class="analysis-card dayun-section">
-                <h4>🔮 大运推演</h4>
+                <h4>🔮 ${isEn ? 'Da Yun (10-Year Luck Cycles)' : '大运推演'}</h4>
                 
                 <div class="qiyun-info">
-                    <p><strong>起运信息：</strong>${qiYun.explanation}</p>
-                    <p><strong>大运方向：</strong>${direction.explanation}</p>
-                    <p class="rule-ref" style="font-size: 0.8rem; color: #888;">📚 规则来源：${direction.ruleRef}, ${qiYun.ruleRef}</p>
+                    <p><strong>${isEn ? 'Start Age:' : '起运信息：'}</strong>${isEn ? this.translateDaYunInfo(qiYun.explanation) : qiYun.explanation}</p>
+                    <p><strong>${isEn ? 'Direction:' : '大运方向：'}</strong>${isEn ? this.translateDaYunInfo(direction.explanation) : direction.explanation}</p>
+                    <p class="rule-ref" style="font-size: 0.8rem; color: #888;">📚 ${isEn ? 'Source:' : '规则来源：'}${direction.ruleRef}, ${qiYun.ruleRef}</p>
                 </div>
 
                 <div class="dayun-timeline" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;">
@@ -981,11 +1052,11 @@ ${weakElements.map(el => elementRemedies[el]).join('\n\n')}
                     color: ${isCurrent ? 'white' : 'inherit'};
                     border: ${isCurrent ? '2px solid #ff6b6b' : '1px solid #ddd'};
                 ">
-                    <div style="font-size: 0.75rem; color: ${isCurrent ? 'rgba(255,255,255,0.8)' : '#888'};">第${dy.step}步</div>
+                    <div style="font-size: 0.75rem; color: ${isCurrent ? 'rgba(255,255,255,0.8)' : '#888'};">${isEn ? 'Cycle' : '第'}${dy.step}${isEn ? '' : '步'}</div>
                     <div style="font-size: 1.2rem; font-weight: bold; margin: 5px 0;">${dy.pillar}</div>
                     <div style="font-size: 0.8rem; color: ${isCurrent ? 'rgba(255,255,255,0.9)' : '#666'};">${dy.tenGod}</div>
                     <div style="font-size: 0.7rem; margin-top: 5px;">${dy.ageRange}</div>
-                    ${isCurrent ? '<div style="font-size: 0.7rem; margin-top: 3px;">← 当前</div>' : ''}
+                    ${isCurrent ? `<div style="font-size: 0.7rem; margin-top: 3px;">← ${isEn ? 'Now' : '当前'}</div>` : ''}
                 </div>
             `;
         });
@@ -994,12 +1065,34 @@ ${weakElements.map(el => elementRemedies[el]).join('\n\n')}
                 </div>
                 
                 <p class="disclaimer-note" style="font-size: 0.85rem; color: #888; margin-top: 12px;">
-                    ⚠️ 大运分析基于传统命理理论，仅供参考，不作为重大决策依据
+                    ${isEn ? '⚠️ Da Yun analysis is based on traditional theory, for reference only' : '⚠️ 大运分析基于传统命理理论，仅供参考，不作为重大决策依据'}
                 </p>
             </div>
         `;
 
         return html;
+    },
+    
+    /**
+     * 翻译大运信息
+     */
+    translateDaYunInfo(text) {
+        const map = {
+            '顺排': 'Forward',
+            '逆排': 'Backward',
+            '阳年男命': 'Yang year male',
+            '阴年女命': 'Yin year female',
+            '阳年女命': 'Yang year female',
+            '阴年男命': 'Yin year male',
+            '岁起运': ' years old starts luck cycle',
+            '月': ' month',
+            '天': ' day'
+        };
+        let result = text;
+        for (const [zh, en] of Object.entries(map)) {
+            result = result.replace(new RegExp(zh, 'g'), en);
+        }
+        return result;
     }
 };
 

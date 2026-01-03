@@ -42,6 +42,26 @@ const ShareUtils = {
         '看开点，本喵天天运气都不好还不是活得很滋润~',
         '建议躺平，顺便给本喵暖床~'
     ],
+    
+    // 猫言猫语 - 日本語版・運気良い（ツンデレ）
+    catQuotesGoodJa: [
+        'ふん、今日は運がいいみたいね...調子乗らないでよ～',
+        'おめでと、今日はこのKittyと並べるレベルかもね～',
+        '運が良くたって、このKittyのご飯係でしょ？',
+        '今日は好き放題できるけど、Kittyのおやつ忘れないでね～',
+        'まあまあね、たまには運がいい日もあるってことよ～',
+        'へぇ～あんたにも運がいい日があるんだ、奇跡ね～'
+    ],
+    
+    // 猫言猫语 - 日本語版・運気悪い（ツンデレ）
+    catQuotesBadJa: [
+        'ちっ、今日は大人しくしてた方がいいよ～',
+        'この運勢...Kittyも同情するわ～',
+        '運が悪い時はKittyを撫でると開運するかもね～',
+        '今日は大事なことより、Kittyの世話をした方がいいよ～',
+        '気にしないで、Kittyだって毎日ツイてないけど元気でしょ～',
+        'ゴロゴロしながらKittyを温めるのがおすすめ～'
+    ],
 
     /**
      * 获取随机Doja Cat图片（根据运势）
@@ -58,7 +78,13 @@ const ShareUtils = {
      * @param {boolean} isGoodLuck - 是否运气好
      */
     getRandomCatQuote(isGoodLuck) {
-        const quotes = isGoodLuck ? this.catQuotesGood : this.catQuotesBad;
+        const isJapanese = typeof I18n !== 'undefined' && I18n.isJapanese();
+        let quotes;
+        if (isJapanese) {
+            quotes = isGoodLuck ? this.catQuotesGoodJa : this.catQuotesBadJa;
+        } else {
+            quotes = isGoodLuck ? this.catQuotesGood : this.catQuotesBad;
+        }
         const randomIndex = Math.floor(Math.random() * quotes.length);
         return quotes[randomIndex];
     },
@@ -156,7 +182,21 @@ const ShareUtils = {
                 font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
             `;
 
-            // 添加品牌头部
+            // 添加品牌头部 - 支持多语言
+            const isJapaneseHeader = typeof I18n !== 'undefined' && I18n.isJapanese();
+            const isEnglishHeader = typeof I18n !== 'undefined' && I18n.isEnglish();
+            let headerTitle, headerSubtitle;
+            if (isJapaneseHeader) {
+                headerTitle = '🐱 KOAKUMA KITTY [易占] Fortune';
+                headerSubtitle = '✨ 倪師匠に学び、ご縁のある方をお導きするにゃ～ ✨';
+            } else if (isEnglishHeader) {
+                headerTitle = '🐱 KOAKUMA KITTY [易占] Fortune';
+                headerSubtitle = '✨ Inspired by Master Ni ✨';
+            } else {
+                headerTitle = '🐱 Kitty坏坏算命屋';
+                headerSubtitle = '✨ 师承倪师，逢运帮助有缘喵~ ✨';
+            }
+            
             const header = document.createElement('div');
             header.style.cssText = `
                 text-align: center;
@@ -168,10 +208,10 @@ const ShareUtils = {
             `;
             header.innerHTML = `
                 <div style="font-size: 1.5rem; font-weight: bold; text-shadow: 1px 1px 2px rgba(200,50,100,0.3);">
-                    🐱 Kitty坏坏算命屋
+                    ${headerTitle}
                 </div>
                 <div style="font-size: 0.9rem; margin-top: 5px;">
-                    ✨ 师承倪师，逢运帮助有缘喵~ ✨
+                    ${headerSubtitle}
                 </div>
             `;
             shareContainer.appendChild(header);
@@ -199,13 +239,26 @@ const ShareUtils = {
                 background: #fff;
                 border-radius: 12px;
             `;
+            // Use i18n for language-aware content
+            const isJapaneseQr = typeof I18n !== 'undefined' && I18n.isJapanese();
+            const isEnglishQr = typeof I18n !== 'undefined' && I18n.isEnglish();
+            let scanHint;
+            if (isJapaneseQr) {
+                scanHint = 'スキャンしてもっと占いを体験～';
+            } else if (isEnglishQr) {
+                scanHint = 'Scan for more fortune features~';
+            } else {
+                scanHint = '扫码体验更多算命功能~';
+            }
+            const displayDomain = 'koakumakitty.com';
+            
             qrContainer.innerHTML = `
                 <div style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">
-                    扫码体验更多算命功能~
+                    ${scanHint}
                 </div>
                 <div id="share-qrcode" style="display: inline-block;"></div>
                 <div style="font-size: 0.8rem; color: #999; margin-top: 8px;">
-                    guavaguy.xyz
+                    ${displayDomain}
                 </div>
             `;
             shareContainer.appendChild(qrContainer);
@@ -213,10 +266,11 @@ const ShareUtils = {
             // 添加到页面
             document.body.appendChild(shareContainer);
 
-            // 生成二维码
+            // 生成二维码 - 使用正确的域名和语言路径
             const qrDiv = shareContainer.querySelector('#share-qrcode');
+            const shareBaseUrl = typeof I18n !== 'undefined' ? I18n.getShareBaseUrl() : 'https://koakumakitty.com/';
             new QRCode(qrDiv, {
-                text: 'https://guavaguy.xyz',
+                text: shareBaseUrl,
                 width: 100,
                 height: 100,
                 colorDark: '#FF6B9D',
@@ -238,21 +292,45 @@ const ShareUtils = {
             // 移除临时容器
             document.body.removeChild(shareContainer);
 
-            // 创建下载链接
+            // 创建下载链接 - 支持多语言文件名
             const link = document.createElement('a');
             const timestamp = new Date().toISOString().slice(0, 10);
-            link.download = `kitty算命结果_${sectionId}_${timestamp}.png`;
+            const isJapaneseFile = typeof I18n !== 'undefined' && I18n.isJapanese();
+            const isEnglishFile = typeof I18n !== 'undefined' && I18n.isEnglish();
+            let filePrefix;
+            if (isJapaneseFile) {
+                filePrefix = 'kitty占い結果';
+            } else if (isEnglishFile) {
+                filePrefix = 'kitty_fortune';
+            } else {
+                filePrefix = 'kitty算命结果';
+            }
+            link.download = `${filePrefix}_${sectionId}_${timestamp}.png`;
             link.href = canvas.toDataURL('image/png');
 
-            // 尝试使用Web Share API（移动端）
+            // 尝试使用Web Share API（移动端）- 支持多语言
+            const isJapanese = typeof I18n !== 'undefined' && I18n.isJapanese();
+            const isEnglish = typeof I18n !== 'undefined' && I18n.isEnglish();
+            let shareTitle, shareText;
+            if (isJapanese) {
+                shareTitle = 'KOAKUMA KITTY [易占] Fortune';
+                shareText = '私の占い結果を見て～';
+            } else if (isEnglish) {
+                shareTitle = 'KOAKUMA KITTY [易占] Fortune';
+                shareText = 'Check out my fortune reading~';
+            } else {
+                shareTitle = 'Kitty坏坏算命屋';
+                shareText = '看看我的算命结果~';
+            }
+            
             if (navigator.share && navigator.canShare) {
                 canvas.toBlob(async (blob) => {
                     const file = new File([blob], link.download, { type: 'image/png' });
                     try {
                         await navigator.share({
                             files: [file],
-                            title: 'Kitty坏坏算命屋',
-                            text: '看看我的算命结果~'
+                            title: shareTitle,
+                            text: shareText
                         });
                     } catch (err) {
                         // 用户取消分享或不支持，降级为下载
@@ -436,23 +514,47 @@ const ShareUtils = {
             ctx.fillStyle = '#fff';
             ctx.font = '20px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText('guavaguy.xyz', canvasSize - 90, canvasSize - 20);
+            ctx.fillText('koakumakitty.com', canvasSize - 90, canvasSize - 20);
 
-            // 创建下载链接
+            // 创建下载链接 - 支持多语言文件名
             const link = document.createElement('a');
             const timestamp = new Date().toISOString().slice(0, 10);
-            link.download = `kitty每日运势_${timestamp}.png`;
+            const isJapaneseDailyFile = typeof I18n !== 'undefined' && I18n.isJapanese();
+            const isEnglishDailyFile = typeof I18n !== 'undefined' && I18n.isEnglish();
+            let dailyFileName;
+            if (isJapaneseDailyFile) {
+                dailyFileName = `kitty今日の運勢_${timestamp}.png`;
+            } else if (isEnglishDailyFile) {
+                dailyFileName = `kitty_daily_fortune_${timestamp}.png`;
+            } else {
+                dailyFileName = `kitty每日运势_${timestamp}.png`;
+            }
+            link.download = dailyFileName;
             link.href = canvas.toDataURL('image/png', 1.0);
 
-            // 尝试使用Web Share API（移动端）
+            // 尝试使用Web Share API（移动端）- 支持多语言
+            const isJapaneseDaily = typeof I18n !== 'undefined' && I18n.isJapanese();
+            const isEnglishDaily = typeof I18n !== 'undefined' && I18n.isEnglish();
+            let dailyShareTitle, dailyShareText;
+            if (isJapaneseDaily) {
+                dailyShareTitle = 'Kitty今日の運勢';
+                dailyShareText = '今日の運勢が出たよ～ 🐱✨';
+            } else if (isEnglishDaily) {
+                dailyShareTitle = 'Kitty Daily Fortune';
+                dailyShareText = "Today's fortune revealed~ 🐱✨";
+            } else {
+                dailyShareTitle = 'Kitty每日运势';
+                dailyShareText = '今日运势已揭晓~ 🐱✨';
+            }
+            
             if (navigator.share && navigator.canShare) {
                 canvas.toBlob(async (blob) => {
                     const file = new File([blob], link.download, { type: 'image/png' });
                     try {
                         await navigator.share({
                             files: [file],
-                            title: 'Kitty每日运势',
-                            text: '今日运势已揭晓~ 🐱✨'
+                            title: dailyShareTitle,
+                            text: dailyShareText
                         });
                     } catch (err) {
                         // 用户取消分享或不支持，降级为下载
@@ -547,9 +649,10 @@ const ShareUtils = {
             qrContainer.style.cssText = 'position: fixed; left: -9999px; top: 0;';
             document.body.appendChild(qrContainer);
 
-            // 生成二维码
+            // 生成二维码 - 使用正确的域名和语言路径
+            const shareBaseUrl = typeof I18n !== 'undefined' ? I18n.getShareBaseUrl() : 'https://koakumakitty.com/';
             new QRCode(qrContainer, {
-                text: 'https://guavaguy.xyz',
+                text: shareBaseUrl,
                 width: size,
                 height: size,
                 colorDark: '#FF6B9D',
@@ -731,23 +834,47 @@ const ShareUtils = {
             ctx.fillStyle = '#fff';
             ctx.font = '24px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText('guavaguy.xyz', canvasWidth - 125, canvasHeight - 100);
+            ctx.fillText('koakumakitty.com', canvasWidth - 125, canvasHeight - 100);
 
-            // 创建下载链接
+            // 创建下载链接 - 支持多语言文件名
             const link = document.createElement('a');
             const timestamp = new Date().toISOString().slice(0, 10);
-            link.download = `kitty_2026运势_${timestamp}.png`;
+            const isJapanese2026File = typeof I18n !== 'undefined' && I18n.isJapanese();
+            const isEnglish2026File = typeof I18n !== 'undefined' && I18n.isEnglish();
+            let yearly2026FileName;
+            if (isJapanese2026File) {
+                yearly2026FileName = `kitty_2026運勢_${timestamp}.png`;
+            } else if (isEnglish2026File) {
+                yearly2026FileName = `kitty_2026_fortune_${timestamp}.png`;
+            } else {
+                yearly2026FileName = `kitty_2026运势_${timestamp}.png`;
+            }
+            link.download = yearly2026FileName;
             link.href = canvas.toDataURL('image/png', 1.0);
 
-            // 尝试使用Web Share API（移动端）
+            // 尝试使用Web Share API（移动端）- 支持多语言
+            const isJapanese2026 = typeof I18n !== 'undefined' && I18n.isJapanese();
+            const isEnglish2026 = typeof I18n !== 'undefined' && I18n.isEnglish();
+            let yearly2026Title, yearly2026Text;
+            if (isJapanese2026) {
+                yearly2026Title = 'Kitty 2026運勢';
+                yearly2026Text = '私の2026運勢を見て～ 🐴✨';
+            } else if (isEnglish2026) {
+                yearly2026Title = 'Kitty 2026 Fortune';
+                yearly2026Text = 'Check my 2026 fortune~ 🐴✨';
+            } else {
+                yearly2026Title = 'Kitty 2026运势';
+                yearly2026Text = '看看我的2026运势~ 🐴✨';
+            }
+            
             if (navigator.share && navigator.canShare) {
                 canvas.toBlob(async (blob) => {
                     const file = new File([blob], link.download, { type: 'image/png' });
                     try {
                         await navigator.share({
                             files: [file],
-                            title: 'Kitty 2026运势',
-                            text: '看看我的2026运势~ 🐴✨'
+                            title: yearly2026Title,
+                            text: yearly2026Text
                         });
                     } catch (err) {
                         link.click();

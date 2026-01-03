@@ -5,9 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KOAKUMA KITTY [易占] Fortune | 恋爱·运势·八字 (师承倪海厦天纪)</title>
-    <meta name="description" content="全网最准的 KOAKUMA KITTY 算命馆！😈 在线八字排盘、紫微斗数、AI面相。师承倪海厦《天纪》算法，小恶魔猫咪带你偷看天机～免费测算今日运势！💕 (kuakumakitty.com)">
+    <meta name="description" content="全网最准的 KOAKUMA KITTY 算命馆！😈 在线八字排盘、紫微斗数、AI面相。师承倪海厦《天纪》算法，小恶魔猫咪带你偷看天机～免费测算今日运势！💕 (koakumakitty.com)">
     <meta name="keywords" content="倪海厦,天纪,八字排盘,紫微斗数,AI面相,易经占卜,2026运势,在线算命,Koakuma Kitty,免费算命,运势分析">
-    <link rel="canonical" href="https://kuakumakitty.com/" />
+    <link rel="canonical" href="https://koakumakitty.com/" />
+    
+    <!-- hreflang for language alternates -->
+    <link rel="alternate" hreflang="zh-CN" href="https://koakumakitty.com/" />
+    <link rel="alternate" hreflang="en" href="https://koakumakitty.com/en/" />
+    <link rel="alternate" hreflang="ja" href="https://koakumakitty.com/ja/" />
+    <link rel="alternate" hreflang="x-default" href="https://koakumakitty.com/" />
 
     <!-- Preconnect for Performance -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
@@ -17,8 +23,8 @@
     <meta property="og:site_name" content="KOAKUMA KITTY [易占] Fortune">
     <meta property="og:title" content="😈 你的2026年运势被 KOAKUMA KITTY 看穿了？！">
     <meta property="og:description" content="全网最准的 KOAKUMA KITTY 算命馆！😈 在线八字排盘、紫微斗数、AI面相。师承倪海厦《天纪》算法。">
-    <meta property="og:url" content="https://kuakumakitty.com">
-    <meta property="og:image" content="https://kuakumakitty.com/images/kitty-icon.jpg">
+    <meta property="og:url" content="https://koakumakitty.com">
+    <meta property="og:image" content="https://koakumakitty.com/images/kitty-icon.jpg">
     <meta property="og:type" content="website">
 
     <link rel="icon" type="image/png" href="images/favicon.png">
@@ -40,7 +46,7 @@
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       "name": "KOAKUMA KITTY [易占] Fortune",
-      "url": "https://kuakumakitty.com",
+      "url": "https://koakumakitty.com",
       "applicationCategory": "LifestyleApplication",
       "operatingSystem": "Browser",
       "offers": {
@@ -106,6 +112,13 @@
     <div class="container">
         <!-- 头部 -->
         <header class="header">
+            <div class="lang-switch">
+                <a href="/" class="lang-link active">中文</a>
+                <span class="lang-sep">|</span>
+                <a href="/en/" class="lang-link">EN</a>
+                <span class="lang-sep">|</span>
+                <a href="/ja/" class="lang-link">日本語</a>
+            </div>
             <div class="logo">
                 <img src="images/kitty-icon.jpg" alt="KOAKUMA KITTY [易占] Fortune - 倪海厦天纪八字排盘系统" class="logo-image">
                 <h1>KOAKUMA KITTY [易占] Fortune</h1>
@@ -160,7 +173,8 @@
                 <span class="tab-icon">💑</span>
                 <span class="tab-text">姻缘配对</span>
             </button>
-            <button class="nav-tab" data-tab="facereading">
+            <!-- 面相功能暂时下线 -->
+            <button class="nav-tab" data-tab="facereading" style="display:none">
                 <span class="tab-icon">👀</span>
                 <span class="tab-text">观相</span>
             </button>
@@ -498,8 +512,8 @@
                 <div id="marriage-result" class="result-section hidden"></div>
             </section>
 
-            <!-- 面相分析 -->
-            <section id="facereading" class="tab-content">
+            <!-- 面相分析 - 暂时下线 -->
+            <section id="facereading" class="tab-content" style="display:none">
                 <div class="module-header">
                     <h2>👀 面相分析 👀</h2>
                     <p>基于倪师《人间道》，让Kitty帮你看看面相~</p>
@@ -684,8 +698,11 @@
     <!-- Face-api.js for face detection -->
     <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/dist/face-api.min.js"></script>
 
+    <!-- i18n Module -->
+    <script src="js/i18n.js?v=1.0"></script>
+    
     <script src="js/tracker.js?v=1.0"></script>
-    <script src="js/share.js?v=2.1"></script>
+    <script src="js/share.js?v=2.2"></script>
     <script src="js/datepicker.js?v=1.1"></script>
 
     <!-- Modules using Imports -->
